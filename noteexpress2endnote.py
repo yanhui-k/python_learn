@@ -1,7 +1,7 @@
 # -*- coding = utf-8 -*-
 # @Time : 2021/12/31 15:57
 # @Author : 严慧
-# @File : from noteexpress to endnote.py
+# @File : noteexpress2endnote.py
 # @Software : PyCharm
 
 '''
