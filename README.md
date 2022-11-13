@@ -7,7 +7,7 @@
 
 <a name="PHMmH"></a>
 ## download_srr.sh
-功能：用于下载SRR文件，用fastq_dump转化为fastq格式，并根据用户的需要将fastq文件重命名<br />![](https://cdn.nlark.com/yuque/0/2022/jpeg/29486135/1668327997600-98c3007f-8fd0-4fec-8f3f-28b63aa1da99.jpeg)
+功能：用于下载SRR文件，用fastq_dump转化为fastq格式，并根据用户的需要将fastq文件重命名<br />![](https://cdn.nlark.com/yuque/0/2022/jpeg/29486135/1668328628336-068f9478-5589-4407-8f44-bcdcec4bb956.jpeg)
 
 执行方法：
 ```
