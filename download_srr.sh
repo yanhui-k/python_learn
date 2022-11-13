@@ -73,7 +73,7 @@ echo '''configfile: "download_srr/config.yaml"
 
 rule all:
     input:
-        expand("download_srr/{sample}.sra", sample=config["SAMPLES"])
+        expand("download_srr/{sample}.txt", sample=config["SAMPLES"])
 
 rule download:
     output:
@@ -106,5 +106,5 @@ else
 fi
 
 wait
-echo -e '\n\n\n###Start rename' >> log_"$time1".log
+echo -e '\n\n\n###Start rename' >> download_srr/log_"$time1".log
 nohup cat $input_file | awk '{system ("rename "$1" "$2" *")}' &>> log_"$time1".log &
