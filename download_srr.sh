@@ -63,17 +63,22 @@ if [ ! -f download_srr/log_"$time1".log ]; then
     touch download_srr/log_"$time1".log
 fi
 
-echo "SAMPLES:" > download_srr/config.yaml
+echo "SAMPLE:" > download_srr/config.yaml
 awk '{print $1}' $input_file | while read line
 do
 echo ' - "'$line'"' >> download_srr/config.yaml
 done
+#echo "OUTPUT:" >> download_srr/config.yaml
+#awk '{print $2}' $input_file | while read line
+#do
+#echo ' - "'$line'"' >> download_srr/config.yaml
+#done
 
 echo '''configfile: "download_srr/config.yaml"
 
 rule all:
     input:
-        expand("download_srr/{sample}.txt", sample=config["SAMPLES"])
+        expand("download_srr/{sample}.txt", sample=config["SAMPLE"])
 
 rule download:
     output:
@@ -90,8 +95,11 @@ rule fastq_dump:
         "download_srr/{sample}.txt"
     shell:
         """
-        fastq-dump --split-3 {input} &>> {output}
+        fastq-dump --split-3 {input} -O download_srr &>> {output}
+        mv download_srr/*.fastq .
         """
+
+
 ''' > download_srr/download_srr.py
 
 echo "### start download\n" > download_srr/log_"$time1".log
@@ -104,7 +112,3 @@ else
     helpdoc
     exit 1
 fi
-
-wait
-echo -e '\n\n\n###Start rename' >> download_srr/log_"$time1".log
-nohup cat $input_file | awk '{system ("rename "$1" "$2" *")}' &>> log_"$time1".log &
