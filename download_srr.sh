@@ -96,7 +96,7 @@ rule fastq_dump:
     shell:
         """
         fastq-dump --split-3 {input} -O download_srr &>> {output}
-        mv download_srr/*.fastq .
+        mv -f download_srr/*.fastq .
         """
 
 
@@ -104,9 +104,13 @@ rule fastq_dump:
 
 echo "### start download\n" > download_srr/log_"$time1".log
 if [ ! "$cluster" ]; then
-    nohup snakemake -s download_srr/download_srr.py -c"$core" -p --latency-wait 60 >> download_srr/log_"$time1".log 2>&1 &
+    nohup snakemake -s download_srr/download_srr.py -c"$core" -p --latency-wait 60 --restart-times 3 >> download_srr/log_"$time1".log 2>&1 &
 elif [ "$cluster" == "bsub" ]; then
-    nohup snakemake -s download_srr/download_srr.py --cluster "bsub -o download_srr/download_srr.out -e download_srr/download_srr.err -q "$queue" -m "$hosts" " -j "$core" -p --latency-wait 60 >> download_srr/log_"$time1".log 2>&1 &
+    if ["$host" == ""];then
+        nohup snakemake -s download_srr/download_srr.py --cluster "bsub -o download_srr/download_srr.out -e download_srr/download_srr.err -q "$queue" -n 1" -j $core -p --latency-wait 60 --restart-times 3 >> download_srr/log_"$time1".log 2>&1 &
+    else
+        nohup snakemake -s download_srr/download_srr.py --cluster "bsub -o download_srr/download_srr.out -e download_srr/download_srr.err -q "$queue" -m "$hosts" -n 1" -j $core -p --latency-wait 60 --restart-times 3 >> download_srr/log_"$time1".log 2>&1 &
+    fi
 else
     echo 'The "cluster" parameter can only be absent or has a value of "bsub"'
     helpdoc
